@@ -1,11 +1,10 @@
-import React, { Children } from 'react';
-import { Modal, View, TouchableOpacity, useWindowDimensions, Text, ScrollView } from 'react-native';
-import { RFValue } from 'react-native-responsive-fontsize';
-import TextoButton from '../TextButton';
+import React from 'react';
+import { Modal, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { s } from "./styles";
-import TextBody from '../TextBody';
 import Button from '../Button';
 import TextoTitle from '../TextoTitle';
+import { Entypo } from '@expo/vector-icons';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 type Props = {
   visible: boolean;
@@ -21,14 +20,14 @@ export default function ModalCustom({ visible, onClose, title , children }: Prop
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
     <View style={styles.container}>
         <View style={styles.containerModal}>
+            <TouchableOpacity onPress={onClose} style={{alignItems:"flex-end"}}>
+                <Entypo name={"cross"} size={RFValue(25)} color="#333" />
+            </TouchableOpacity>
         <View style={styles.titleModal}>
             <TextoTitle>{title}</TextoTitle>
         </View>
         <View style={styles.bodyModal}>
             {children}
-        </View>
-        <View style={styles.footerModal}>
-            <Button text={"Fechar"} onPress={onClose}></Button>
         </View>
         </View>
     </View>

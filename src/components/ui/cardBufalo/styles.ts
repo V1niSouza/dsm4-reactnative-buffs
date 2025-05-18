@@ -6,6 +6,7 @@ export const s = (width: number, height: number) => StyleSheet.create({
     container: {
         width: width * 0.9,
         height: height * 0.1,
+        
         // Sombra
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.2,

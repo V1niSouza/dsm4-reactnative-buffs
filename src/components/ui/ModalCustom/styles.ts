@@ -25,6 +25,7 @@ export const s = (width: number, height: number) => StyleSheet.create({
         paddingVertical: RFValue(10),
         alignItems: "center",
         justifyContent: "center",
+        flexDirection: "row"
     },
 
     bodyModal: {
@@ -33,9 +34,9 @@ export const s = (width: number, height: number) => StyleSheet.create({
         padding: RFValue(10),
     },
 
-    footerModal:{
-        marginTop: RFValue(10), 
-        alignSelf: 'flex-end' 
+    footerModal:{ 
+        alignSelf: 'flex-end', 
+
     },
 
 

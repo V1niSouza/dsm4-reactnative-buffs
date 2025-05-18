@@ -9,9 +9,11 @@ import ModalCustom from "../../src/components/ui/ModalCustom";
 import TextBody from "../../src/components/ui/TextBody";
 import { colors } from "../../src/styles/colors";
 
+
 import DropDownPicker from 'react-native-dropdown-picker';
 import { RFValue } from "react-native-responsive-fontsize";
 import DateInput from "../../src/components/ui/InputDate";
+
 
 export default function Bufalos() {
    const { width, height } = useWindowDimensions(); // Pega a dimensão do dispositivo 
@@ -39,7 +41,7 @@ export default function Bufalos() {
   return (
     <SafeAreaView style={{ flex: 1, alignItems: "center"}}>
       <ScrollView contentContainerStyle={{ paddingBottom: RFValue(30) }}>
-        <View style={{width: width, height: height*0.1, alignItems: "center", justifyContent:"center"}}>
+        <View style={{width: width, height: height*0.1, alignItems: "center", justifyContent:"center" }}>
           <BarSearch />
         </View>
         <View style={{width: width, height: height*0.05, alignItems: "center", justifyContent:"center"}}>
@@ -217,7 +219,7 @@ export default function Bufalos() {
       </View>
     </View>
 
-    <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(10) }}>
+    <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(30) }}>
       <View style={{ flexDirection: "column", width: width * 0.40, height: height * 0.05 }}>
         <TextBody>Tag/Brinco Mãe:</TextBody>
         <TextInput
@@ -248,6 +250,12 @@ export default function Bufalos() {
           placeholder="Ex: BUF002"
           placeholderTextColor="#999"
         />
+      </View>
+    </View>
+
+    <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(20) }}>
+      <View style={{ flexDirection: "column", width: width * 0.88, height: height * 0.05 }}>
+        <Button text={"Cadastrar novo Bubalino"}></Button>
       </View>
     </View>
     
