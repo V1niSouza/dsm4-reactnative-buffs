@@ -1,40 +1,37 @@
 import { StyleSheet } from "react-native";
 import { colors } from "../../../styles/colors";
 
-export const s = StyleSheet.create({
+export const s = (width: number, height: number) => StyleSheet.create({
     cardContainer:{
         backgroundColor: colors.yellow.base,
-        width: 520, // Largura
-        height: 200, // Altura 
+        width: width*0.93, // Largura
+        height: height*0.21, // Altura 
         borderWidth: 0.1,
         borderColor: '#000',
         borderRadius: 10,
         elevation: 5 // Sombra
     },
     cardTitle:{
-        backgroundColor: '#FFF',
-        width: 520, // Largura
-        height: 60, // Altura 
+        backgroundColor: '#fff',
+        width: '100%', // Largura
+        height: '30%', // Altura 
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
         borderBottomColor: '#000',
         borderBottomWidth: 0.6, // Sombra
-        top: -1,
-        flex: 1,
         justifyContent: 'center',
-
     },
     cardBody:{
         backgroundColor: '#FFF',
-        width: 520, // Largura
-        height: 90, // Altura 
+        width: '100%', // Largura
+        height: "50%", // Altura 
         justifyContent: 'center',
         alignItems: 'center'
     },
     cardFooter:{
-        backgroundColor: '#FFF',
-        width: 520, // Largura
-        height: 40, // Altura 
+        backgroundColor: '#fff',
+        width: '100%', // Largura
+        height: "20%", // Altura 
         borderBottomRightRadius: 10,
         borderBottomLeftRadius: 10,
         justifyContent: 'center',

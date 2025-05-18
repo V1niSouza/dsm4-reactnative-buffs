@@ -3,7 +3,7 @@ import { Text } from "react-native";
 import { s } from "./styles"
 
 type Props = {
-  children: string;
+  children: React.ReactNode;
 };
 
 export default function TextoTitle({ children } : Props) {

@@ -1,15 +1,13 @@
 import { StyleSheet } from "react-native";
 import { colors } from "../../../styles/theme"
+import { RFValue } from 'react-native-responsive-fontsize';
 
 export const s = StyleSheet.create({
-    title:{
+    textbody:{
         color: colors.black.base,
-        fontSize: 24,
-        fontWeight: 'bold',
+        fontSize: RFValue(12),
+        fontWeight: 'normal',
         fontStyle: 'normal',
-        textAlign: 'left',
-        letterSpacing: 0.1,
-
-        marginBottom: 10
+        letterSpacing: 0.01  
     }
 })

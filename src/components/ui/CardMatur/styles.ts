@@ -1,33 +1,31 @@
 import { StyleSheet } from "react-native";
 import { colors } from "../../../styles/colors";
+import { RFValue } from 'react-native-responsive-fontsize';
 
-export const s = StyleSheet.create({
+export const s = (width: number, height: number) => StyleSheet.create({
     cardContainer:{
         backgroundColor: colors.yellow.base,
-        width: 200, // Largura
-        height: 150, // Altura 
+        width: width*0.28, // Largura
+        height: height*0.13, // Altura 
         borderWidth: 0.1,
-        borderColor: '#000',
+        borderColor: '#FFF',
         borderRadius: 10,
         elevation: 5 // Sombra
     },
     cardTitle:{
         backgroundColor: '#FFF',
-        width: 200, // Largura
-        height: 60, // Altura 
+        width: '100%', // Largura
+        height: '30%', // Altura 
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
         borderBottomColor: '#000',
         borderBottomWidth: 0.6, // Sombra
-        top: -1,
-        flex: 1,
         justifyContent: 'center',
-
     },
     cardBody:{
         backgroundColor: '#FFF',
-        width: 200, // Largura
-        height: 90, // Altura 
+        width: '100%', // Largura
+        height: '70%', // Altura 
         borderBottomRightRadius: 10,
         borderBottomLeftRadius: 10,
         justifyContent: 'center',
@@ -35,16 +33,16 @@ export const s = StyleSheet.create({
     },
     titleCard:{
         color: colors.black.base,
-        fontSize: 17,
+        fontSize: RFValue(13),
         fontWeight: '700',
         fontStyle: 'normal',
         letterSpacing: 0.2,
-        marginLeft: 20,
+        marginLeft: 1,
         position: 'absolute'
     },
     textCard:{
         color: colors.black.base,
-        fontSize: 40,
+        fontSize: RFValue(30),
         fontWeight: 'bold',
         fontStyle: 'normal',
         letterSpacing: 0.2
@@ -53,6 +51,6 @@ export const s = StyleSheet.create({
         color: 'black',
         position: 'absolute',
         right: 10,
-        fontSize: 25
+        fontSize: RFValue(20)
     }
 })

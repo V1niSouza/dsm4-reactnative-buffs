@@ -1,11 +1,12 @@
 import { StyleSheet } from "react-native";
 import { colors } from "../../../styles/colors";
 
+
 export const s = StyleSheet.create({
     cardContainer:{
         backgroundColor: colors.yellow.base,
-        width: 250, // Largura
-        height: 150, // Altura 
+        width: 140, // Largura
+        height: 110, // Altura 
         borderWidth: 0.1,
         borderColor: '#000',
         borderRadius: 10,
@@ -13,8 +14,8 @@ export const s = StyleSheet.create({
     },
     cardTitle:{
         backgroundColor: '#FFF',
-        width: 250, // Largura
-        height: 60, // Altura 
+        width: 140, // Largura
+        height: 30, // Altura 
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
         borderBottomColor: '#000',
@@ -26,8 +27,8 @@ export const s = StyleSheet.create({
     },
     cardBody:{
         backgroundColor: '#FFF',
-        width: 250, // Largura
-        height: 90, // Altura 
+        width: 140, // Largura
+        height: 70, // Altura 
         borderBottomRightRadius: 10,
         borderBottomLeftRadius: 10,
         justifyContent: 'center',
