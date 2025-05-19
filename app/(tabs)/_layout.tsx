@@ -4,6 +4,7 @@ import { Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../src/styles/colors";
+import { RFValue } from "react-native-responsive-fontsize";
 
 export default function LayoutAbas() {
   return (
@@ -15,9 +16,9 @@ export default function LayoutAbas() {
           backgroundColor: colors.yellow.base,
         },
         headerTitleStyle: {
-          fontSize: 16,
+          fontSize: 24,
           fontWeight: "bold",
-          color: colors.black.base
+          color: colors.black.base,
         },
         headerTitleAlign: "center",
         // headerShown: false, // se quiser esconder por completo
@@ -44,7 +45,7 @@ export default function LayoutAbas() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Início",
+          title: "Home",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
@@ -70,6 +71,26 @@ export default function LayoutAbas() {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="reproducao"
+        options={{
+          title: "Reprodução",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="document-text" size={size} color={color} />
+          ),
+        }}
+      />   
+
+      <Tabs.Screen
+        name="lactacao"
+        options={{
+          title: "Lactação",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="document-text" size={size} color={color} />
+          ),
+        }}
+      />    
     </Tabs>
   );
 }

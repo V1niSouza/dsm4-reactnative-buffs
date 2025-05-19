@@ -10,6 +10,7 @@ import { colors } from "../../../styles/colors";
 import Button from "../Button";
 import { router } from "expo-router";
 import DropDownPicker from "react-native-dropdown-picker";
+import DateInput from "../InputDate";
 
 type Props = {
   text_tag: string,
@@ -32,12 +33,15 @@ export default function CardBuffalo({ text_tag, text_name, text_sex, text_maturi
   const [expanded, setExpanded] = useState(false);
   const [showContent, setShowContent] = useState(false);
 
-     const [openSex, setOpenSex] = React.useState(false);
-     const [valueSex, setValueSex] = React.useState(null);
-     const [itemsSex, setItemsSex] = useState([
-       { label: 'Ativo', value: 'Ativo' },
-       { label: 'Descartado', value: 'Descarte' }
-     ]);
+  const [openSex, setOpenSex] = React.useState(false);
+  const [valueSex, setValueSex] = React.useState(null);
+  const [itemsSex, setItemsSex] = useState([
+    { label: 'Ativo', value: 'Ativo' },
+    { label: 'Descartado', value: 'Descarte' }
+  ]);
+
+  const [date, setDate] = useState(new Date());
+  const [openDate, setOpenDate] = useState(false);
 
   // altura do corpo extra quando expandido 
   const EXTRA_HEIGHT = height * 0.23;
@@ -296,19 +300,8 @@ const toggleExpand = () => {
         />
       </View>
       <View style={{ flexDirection: "column", width: width * 0.40, height: height * 0.06 }}>
-        <TextBody>Data atualização:</TextBody>
-        <TextInput
-          style={{
-            backgroundColor: colors.gray.fundoInput,
-            borderRadius: RFValue(10),
-            borderWidth: RFValue(0.6),
-            borderColor: colors.gray.base,
-            width: '100%',
-            height: '100%'
-          }}
-          placeholder="Ex: Bella"
-          placeholderTextColor="#999"
-        />
+            <TextBody>Data do evento:</TextBody>
+            <DateInput value={date} onChange={(newDate) => setDate(newDate)} />
       </View>
     </View>
 
@@ -323,8 +316,8 @@ const toggleExpand = () => {
               <TextBody>400 KG</TextBody>
             </View>
             <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-              <TextBody>-</TextBody>
               <TextBody>05/10/2024</TextBody>
+              <TextBody>-</TextBody>
               <TextBody>400 KG</TextBody>
             </View>
           </ScrollView>

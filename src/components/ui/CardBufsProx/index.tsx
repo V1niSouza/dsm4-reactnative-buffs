@@ -18,14 +18,18 @@ export default function CardBufsProx({ text_tag, text_name, text_sex, text_grupo
   const styles = s(width, height);
     return (
       <View style={styles.cardContainer}>
-        <View style={styles.cardTitle}> <TextBody>{text_tag}</TextBody> </View>
+        <View style={styles.cardTitle}> 
+          <TextBody>{text_tag}</TextBody> 
+        </View>
         <View style={styles.cardBody}>
           <View style={styles.cardPhoto}></View>
           <View style={styles.cardBody2}>
             <TextBody>{text_name}</TextBody>
               <View style={styles.row}>
                 <TextBody variant="secondary">{text_sex}</TextBody>
-                <View style={styles.espacador}><Text>-</Text></View>
+                <View style={styles.espacador}>
+                  <Text>-</Text>
+                </View>
                 <TextBody variant="secondary">{text_grupo}</TextBody>
               </View>
           </View>
