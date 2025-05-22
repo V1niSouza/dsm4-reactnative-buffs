@@ -5,12 +5,9 @@ import { s } from "./styles";
 import TextBody from "../TextBody";
 import { RFValue } from "react-native-responsive-fontsize";
 import TextoButton from "../TextButton";
-import ModalCustom from "../ModalCustom";
-import { colors } from "../../../styles/colors";
-import Button from "../Button";
 import { router } from "expo-router";
-import DropDownPicker from "react-native-dropdown-picker";
-import DateInput from "../InputDate";
+import Button from "../Button";
+
 
 type Props = {
   text_tag: string,
@@ -18,13 +15,14 @@ type Props = {
   text_sex: string,
   text_maturidade: string,
   text_saude: string,
-  text_nascimento: string,
   text_grupo: string,
   text_localizacao: string,
-  text_prodLeite: string
+  text_atividade: string,
+  text_peso: string,
+  text_raca: string
 };
 
-export default function CardBuffalo({ text_tag, text_name, text_sex, text_maturidade, text_saude, text_nascimento, text_grupo, text_localizacao, text_prodLeite }: Props) {
+export default function CardBuffalo({ text_tag, text_name, text_sex, text_maturidade, text_grupo, text_localizacao, text_atividade, text_raca, text_peso}: Props) {
   const { width, height } = useWindowDimensions();
   const styles = s(width, height);
   const [modalVisibleZootecnico, setModalVisibleZootecnico] = useState(false);
@@ -44,7 +42,7 @@ export default function CardBuffalo({ text_tag, text_name, text_sex, text_maturi
   const [openDate, setOpenDate] = useState(false);
 
   // altura do corpo extra quando expandido 
-  const EXTRA_HEIGHT = height * 0.23;
+  const EXTRA_HEIGHT = height * 0.16;
 
   // anima apenas a área extra, de 0 → EXTRA_HEIGHT
   const animExtraHeight = useRef(new Animated.Value(0)).current;
@@ -87,20 +85,30 @@ const toggleExpand = () => {
 
   return (
     <>
-      <TouchableOpacity onPress={toggleExpand} activeOpacity={1}>
-        <View style={styles.container}>
+      <TouchableOpacity onPress={toggleExpand} activeOpacity={1} >
+        <View style={ styles.container }>
           <View style={styles.cardTitle}>
+            <View style={styles.cardPhoto} />
             <TextBody>{text_tag}</TextBody>
+              <TextBody>-</TextBody>
+              <TextBody>{text_name}</TextBody>
+
           </View>
           <View style={containerStyle}>
-            <View style={styles.cardPhoto} />
-            <View style={{ marginRight: RFValue(80) }}>
-              <TextBody>{text_name}</TextBody>
+            <View style={{ marginRight: RFValue(40), flexDirection: 'row' }}>
+              <View style={styles.cardFundoAtividade}>
+                <TextBody variant="secondary">{text_sex}</TextBody>
+              </View>
+              <View style={styles.cardFundoAtividade}>
+                <TextBody variant="secondary">{text_maturidade}</TextBody>
+              </View>
+              <View style={styles.cardFundoAtividade}>
+                <TextBody variant="secondary">{text_atividade}</TextBody>
+              </View>
             </View>
-            <View style={{ marginLeft: RFValue(80) }}>
-              <TextBody variant="secondary">{text_sex}</TextBody>
+            <View>
+              <Entypo name={expanded ? "chevron-small-up" : "chevron-small-down"} size={24} color="#333" />
             </View>
-            <Entypo name={expanded ? "chevron-small-up" : "chevron-small-down"} size={24} color="#333" />
           </View>
         </View>
       </TouchableOpacity>
@@ -110,228 +118,43 @@ const toggleExpand = () => {
         style={{
             height: animExtraHeight,
             overflow: 'hidden',
-            width: '90%',
+            width: width * 0.903,
             alignSelf: 'center',
+            borderBottomEndRadius: RFValue(10),
+            borderBottomStartRadius: RFValue(10),
+            marginBottom: RFValue(8) 
         }}
         >
             {showContent && (
-            <View style={styles.cardFooter}>
+            <View style={styles.cardFooter} >
                 <View style={{ flexDirection: 'row', gap: RFValue(70), marginBottom: RFValue(5)}}>
                     <View>
-                        <TextBody variant="secondary">Maturidade:</TextBody>
-                        <TextBody>{text_maturidade}</TextBody>
+                        <TextBody variant="secondary">Raça:</TextBody>
+                        <TextBody>{text_raca}</TextBody>
                     </View>
                     <View>
-                        <TextBody variant="secondary">Saúde:</TextBody>
-                        <TextBody>{text_saude}</TextBody>
+                        <TextBody variant="secondary">Peso:</TextBody>
+                        <TextBody>{text_peso}</TextBody>
                     </View>
                 </View>
                 <View style={{ flexDirection: 'row', gap: RFValue(58), marginBottom: RFValue(5)}}>
                     <View>
-                        <TextBody variant="secondary">Nascimento:</TextBody>
-                        <TextBody>{text_nascimento}</TextBody>
+                        <TextBody variant="secondary">Localização:</TextBody>
+                        <TextBody>{text_localizacao}</TextBody>
                     </View>
                     <View>
                         <TextBody variant="secondary">Grupo:</TextBody>
                         <TextBody>{text_grupo}</TextBody>
                     </View>
                 </View>
-                <View style={{ flexDirection: 'row', gap: RFValue(70), marginBottom: RFValue(5)}}>
-                    <View>
-                        <TextBody variant="secondary">Localização:</TextBody>
-                        <TextBody>{text_localizacao}</TextBody>
-                    </View>
-                    <View>
-                        <TextBody variant="secondary">Produção de Leite:</TextBody>
-                        <TextBody>{text_prodLeite}</TextBody>
-                    </View>
-                </View>
                 <View>
                     <View style={styles.cardActions}>
-                        <TouchableOpacity style={styles.actionOne} onPress={() => setModalVisibleZootecnico(true)}><TextoButton>Zootécnico</TextoButton></TouchableOpacity>
-                        <TouchableOpacity style={styles.actionOne} onPress={() => setModalVisibleSanitario(true)}><TextoButton>Sanitário</TextoButton></TouchableOpacity>
-                        <TouchableOpacity style={styles.actionOne} onPress={() => setModalVisibleAtividade(true)}><TextoButton>Atividade</TextoButton></TouchableOpacity>
+                        <Button text={"Abrir Perfil"} onPress={() => router.navigate("/perfil")}></Button>
                     </View>
                 </View>
-
             </View>
         )}
-        </Animated.View>
-
-  <ModalCustom visible={modalVisibleZootecnico} onClose={() => setModalVisibleZootecnico(false)} title={"Prontuário dados Zootécnicos"}>
-    <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(30) }}>
-      <View style={{ flexDirection: "column", width: width * 0.88, height: height * 0.09 }}>
-        <TextBody>Historico de Peso:</TextBody>
-        <View style={{ flexDirection: "column", width: "100%", height: "100%", backgroundColor: colors.gray.fundoInput, borderRadius: RFValue(10), borderWidth: RFValue(0.6), borderColor: colors.gray.base, padding: RFValue(5)}}>
-          <ScrollView>
-            <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-              <TextBody>05/10/2024</TextBody>
-              <TextBody>-</TextBody>
-              <TextBody>400 KG</TextBody>
-            </View>
-            <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-              <TextBody>-</TextBody>
-              <TextBody>05/10/2024</TextBody>
-              <TextBody>400 KG</TextBody>
-            </View>
-          </ScrollView>
-        </View>
-      </View>
-    </View>
-
-    <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(30) }}>
-      <View style={{ flexDirection: "column", width: width * 0.88, height: height * 0.09 }}>
-        <TextBody>Historico da Condição Corporal:</TextBody>
-        <View style={{ flexDirection: "column", width: "100%", height: "100%", backgroundColor: colors.gray.fundoInput, borderRadius: RFValue(10), borderWidth: RFValue(0.6), borderColor: colors.gray.base, padding: RFValue(5)}}>
-          <ScrollView>
-            <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-              <TextBody>05/10/2024</TextBody>
-              <TextBody>-</TextBody>
-              <TextBody>Legal</TextBody>
-            </View>
-            <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-              <TextBody>05/10/2024</TextBody>
-              <TextBody>-</TextBody>
-              <TextBody>OK</TextBody>
-            </View>
-          </ScrollView>
-        </View>
-      </View>
-    </View>
-
-    <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(30) }}>
-      <View style={{ flexDirection: "column", width: width * 0.88, height: height * 0.09 }}>
-        <TextBody>Historico de Observações:</TextBody>
-        <View style={{ flexDirection: "column", width: "100%", height: "100%", backgroundColor: colors.gray.fundoInput, borderRadius: RFValue(10), borderWidth: RFValue(0.6), borderColor: colors.gray.base, padding: RFValue(5)}}>
-          <ScrollView>
-            <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-              <TextBody>05/10/2024</TextBody>
-              <TextBody>-</TextBody>
-              <TextBody>Legal</TextBody>
-            </View>
-            <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-              <TextBody>05/10/2024</TextBody>
-              <TextBody>-</TextBody>
-              <TextBody>OK</TextBody>
-            </View>
-          </ScrollView>
-        </View>
-      </View>
-    </View>
-
-    <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(20) }}>
-      <View style={{ flexDirection: "column", width: width * 0.88, height: height * 0.05 }}>
-        <Button text={"Atualizar dados"} onPress={() => router.push("/zootecnico")}></Button>
-      </View>
-    </View>
-    
-  </ModalCustom>  
-
-  <ModalCustom visible={modalVisibleSanitario} onClose={() => setModalVisibleSanitario(false)} title={"Prontuário dados Sanitários"}>
-    <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(30) }}>
-      <View style={{ flexDirection: "column", width: width * 0.88, height: height * 0.5 }}>
-        <ScrollView>
-          <TextBody>Historicos:</TextBody>
-          <View style={{ flexDirection: "column", width: "100%", height: "100%", backgroundColor: colors.gray.fundoInput, borderRadius: RFValue(10), borderWidth: RFValue(0.6), borderColor: colors.gray.base, padding: RFValue(5)}}>
-              <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-                <TextBody>Doença Combatida:</TextBody>
-                <TextBody>400 KG</TextBody>
-              </View>
-              <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-                <TextBody>Tipo de tratamento aplicado:</TextBody>
-                <TextBody>400 KG</TextBody>
-              </View>
-              <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-                <TextBody>Medicamento aplicado:</TextBody>
-                <TextBody>400 KG</TextBody>
-              </View>
-              <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-                <TextBody>Dosagem:</TextBody>
-                <TextBody>400 KG</TextBody>
-              </View>
-              <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-                <TextBody>Data aplicada:</TextBody>
-                <TextBody>400 KG</TextBody>
-              </View>
-              <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-                <TextBody>Data retorno:</TextBody>
-                <TextBody>400 KG</TextBody>
-              </View>
-          </View>
-        </ScrollView>
-      </View>
-    </View>
-
-    <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(20) }}>
-      <View style={{ flexDirection: "column", width: width * 0.88, height: height * 0.05 }}>
-        <Button text={"Atualizar dados"} onPress={() => router.push("/zootecnico")}></Button>
-      </View>
-    </View>
-    
-  </ModalCustom>     
-
-  <ModalCustom visible={modalVisibleAtividade} onClose={() => setModalVisibleAtividade(false)} title={"Prontuário Atividade"}>
-    <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(30) }}>
-      <View style={{ flexDirection: "column", width: width * 0.40 }}>
-        <TextBody>Sexo:</TextBody>
-        <DropDownPicker
-          open={openSex}
-          value={valueSex}
-          items={itemsSex}
-          setOpen={setOpenSex}
-          setValue={setValueSex}
-          setItems={setItemsSex}
-          placeholder="Selecione"
-          containerStyle={{
-            width: '100%',
-            height: RFValue(40),
-            marginBottom: RFValue(0)
-          }}
-          style={{
-            borderColor: colors.gray.base,
-            backgroundColor: colors.gray.fundoInput,
-            borderRadius: RFValue(10)
-          }}
-          dropDownContainerStyle={{
-            backgroundColor: colors.gray.fundoInput,
-            borderColor: colors.gray.base,
-            borderRadius: RFValue(10)
-          }}
-        />
-      </View>
-      <View style={{ flexDirection: "column", width: width * 0.40, height: height * 0.06 }}>
-            <TextBody>Data do evento:</TextBody>
-            <DateInput value={date} onChange={(newDate) => setDate(newDate)} />
-      </View>
-    </View>
-
-    <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(30) }}>
-      <View style={{ flexDirection: "column", width: width * 0.88, height: height * 0.09 }}>
-        <TextBody>Descrição:</TextBody>
-        <View style={{ flexDirection: "column", width: "100%", height: "100%", backgroundColor: colors.gray.fundoInput, borderRadius: RFValue(10), borderWidth: RFValue(0.6), borderColor: colors.gray.base, padding: RFValue(5)}}>
-          <ScrollView>
-            <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-              <TextBody>05/10/2024</TextBody>
-              <TextBody>-</TextBody>
-              <TextBody>400 KG</TextBody>
-            </View>
-            <View style={{ flexDirection: "row", gap: RFValue(10)}}>
-              <TextBody>05/10/2024</TextBody>
-              <TextBody>-</TextBody>
-              <TextBody>400 KG</TextBody>
-            </View>
-          </ScrollView>
-        </View>
-      </View>
-    </View>
-
-    <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(20) }}>
-      <View style={{ flexDirection: "column", width: width * 0.88, height: height * 0.05 }}>
-        <Button text={"Atualizar dados"}></Button>
-      </View>
-    </View>
-    
-  </ModalCustom>       
+        </Animated.View>     
     </>
   );
 }

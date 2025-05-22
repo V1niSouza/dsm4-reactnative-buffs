@@ -14,7 +14,7 @@ export const s = (width: number, height: number) => StyleSheet.create({
         width: width * 0.97,
         maxHeight: height * 0.8, // Limita sem travar
         backgroundColor: 'white',
-        padding: RFValue(10),
+        padding: RFValue(2),
         borderRadius: RFValue(10),
     },
 

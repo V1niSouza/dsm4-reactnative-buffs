@@ -45,7 +45,7 @@ export const s = (width: number, height: number) =>
       backgroundColor: colors.white.base,
       width: "100%", // Largura
       height: "100%", // Altura
-      paddingHorizontal: RFValue(10),
+      paddingHorizontal: RFValue(20),
       marginTop: RFValue(0.2),
 
       // Sombra

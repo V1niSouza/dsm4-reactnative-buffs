@@ -20,24 +20,24 @@ export default function BarAlter({ active, setActive }: Props) {
   <TouchableOpacity
     style={[
       styles.button,
-      { backgroundColor: active === "observacao" ? colors.white.base : colors.gray.base, borderColor: active === "observacao" ? colors.gray.fundo : colors.gray.base }
+      { backgroundColor: active === "zootecnico" ? colors.white.base : colors.gray.fundoInput, borderColor: active === "zootecnico" ? colors.yellow.dark : colors.gray.base }
     ]}
-    onPress={() => setActive("observacao")}
+    onPress={() => setActive("zootecnico")}
   >
-    <TextBody variant={active === "observacao" ? "primary" : "secondary"}>
-      Em Observação
+    <TextBody variant={active === "zootecnico" ? "primary" : "secondary"}>
+      Zootécnico
     </TextBody>
   </TouchableOpacity>
 
   <TouchableOpacity
     style={[
       styles.button,
-      { backgroundColor: active === "confirmadas" ? colors.white.base : colors.gray.base, borderColor: active === "confirmadas" ? colors.gray.fundo : colors.gray.base}
+      { backgroundColor: active === "sanitario" ? colors.white.base : colors.gray.fundoInput, borderColor: active === "sanitario" ? colors.yellow.dark : colors.gray.base}
     ]}
-    onPress={() => setActive("confirmadas")}
+    onPress={() => setActive("sanitario")}
   >
-    <TextBody variant={active === "confirmadas" ? "primary" : "secondary"}>
-      Confirmadas
+    <TextBody variant={active === "sanitario" ? "primary" : "secondary"}>
+      Sanitario
     </TextBody>
   </TouchableOpacity>
 </View>

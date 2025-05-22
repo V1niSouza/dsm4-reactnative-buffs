@@ -4,28 +4,27 @@ import { RFValue } from 'react-native-responsive-fontsize';
 
 export const s = (width: number, height: number) => StyleSheet.create({
     cardContainer:{
-        backgroundColor: colors.yellow.base,
-        width: width*0.28, // Largura
-        height: height*0.13, // Altura 
-        borderWidth: 0.1,
-        borderColor: '#FFF',
-        borderRadius: 10,
-        elevation: 5 // Sombra
+        width: width * 0.22, // Largura
+        height: height * 0.081, // Altura 
+
+        borderWidth: RFValue(0.06),
+        borderColor: '#000',
+        borderRadius: RFValue(10),
+        elevation: RFValue(5)
     },
     cardTitle:{
         backgroundColor: '#FFF',
         width: '100%', // Largura
-        height: '30%', // Altura 
+        height: '35%', // Altura 
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
-        borderBottomColor: '#000',
-        borderBottomWidth: 0.6, // Sombra
         justifyContent: 'center',
+        alignItems: 'center'
     },
     cardBody:{
         backgroundColor: '#FFF',
         width: '100%', // Largura
-        height: '70%', // Altura 
+        height: '65%', // Altura 
         borderBottomRightRadius: 10,
         borderBottomLeftRadius: 10,
         justifyContent: 'center',
@@ -33,7 +32,7 @@ export const s = (width: number, height: number) => StyleSheet.create({
     },
     titleCard:{
         color: colors.black.base,
-        fontSize: RFValue(13),
+        fontSize: RFValue(12),
         fontWeight: '700',
         fontStyle: 'normal',
         letterSpacing: 0.2,
@@ -42,7 +41,7 @@ export const s = (width: number, height: number) => StyleSheet.create({
     },
     textCard:{
         color: colors.black.base,
-        fontSize: RFValue(30),
+        fontSize: RFValue(27),
         fontWeight: 'bold',
         fontStyle: 'normal',
         letterSpacing: 0.2

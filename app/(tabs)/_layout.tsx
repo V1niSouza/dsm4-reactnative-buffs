@@ -90,7 +90,17 @@ export default function LayoutAbas() {
             <Ionicons name="document-text" size={size} color={color} />
           ),
         }}
-      />    
+      />
+
+      <Tabs.Screen
+        name="lotes"
+        options={{
+          title: "Lotes",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="document-text" size={size} color={color} />
+          ),
+        }}
+      />   
     </Tabs>
   );
 }

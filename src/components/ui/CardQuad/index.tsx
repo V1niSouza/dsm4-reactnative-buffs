@@ -9,18 +9,18 @@ type Props = {
     contador: string,
 };
 
-export default function CardMatur({ title, contador } : Props) {
+export default function CardQuad({ title, contador } : Props) {
     const { width, height } = useWindowDimensions();
     const styles = s(width, height);
+
     return(
-        <TouchableOpacity style={styles.cardContainer}>
+        <View style={styles.cardContainer}>
             <View style={styles.cardTitle}>
                 <Text style={styles.titleCard}> {title}</Text>
-                <AntDesign name="arrowright" style={styles.iconCard} />
             </View>
             <View style={styles.cardBody}>
                 <Text style={styles.textCard}>{contador}</Text>
             </View>
-        </TouchableOpacity>
+        </View>
     )
 }

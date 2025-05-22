@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { s } from "./styles";
 
 type Props = {
-    children: [React.ReactNode, React.ReactNode, React.ReactNode];
+    children: [React.ReactNode, React.ReactNode, React.ReactNode, React.ReactNode];
 };
 
 export default function LayoutMatur({
