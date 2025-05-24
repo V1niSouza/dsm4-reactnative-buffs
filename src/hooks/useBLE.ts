@@ -12,8 +12,8 @@ import * as ExpoDevice from "expo-device";
 
 import base64 from "react-native-base64";
 
-const HEART_RATE_UUID = "0000180d-0000-1000-8000-00805f9b34fb";
-const HEART_RATE_CHARACTERISTIC = "00002a37-0000-1000-8000-00805f9b34fb";
+const HEART_RATE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
+const HEART_RATE_CHARACTERISTIC = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
 
 interface BluetoothLowEnergyApi {
   requestPermissions(): Promise<boolean>;
