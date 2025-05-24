@@ -1,9 +1,7 @@
-import { ScrollView, View, SafeAreaView } from "react-native";
-import CardBufsProx from "../../src/components/ui/CardBufsProx";
-import { useWindowDimensions } from "react-native"; //  Nativo do react-native e é para responsividade
-import TextoTitle from "../../src/components/ui/TextoTitle";
+import { SafeAreaView, ScrollView, useWindowDimensions, View } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import CardScannerTop from "../../src/components/ui/CardScannerTop";
+import TextoTitle from "../../src/components/ui/TextoTitle";
 import CardBuffalo from "../../src/components/ui/cardBufalo";
 
 export default function ScreenScanner() {
