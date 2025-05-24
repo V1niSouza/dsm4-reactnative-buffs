@@ -1,0 +1,30 @@
+import React from "react";
+import { TouchableOpacity, View, Text } from "react-native";
+import { s } from "./styles";
+import Feather from '@expo/vector-icons/Feather';
+import { useWindowDimensions } from 'react-native';
+
+type Props = {
+    title: string,
+    contador: string,
+    footerText: string
+};
+
+export default function CardAlert({ title, contador, footerText } : Props) {
+    const { width, height } = useWindowDimensions();
+    const styles = s(width, height);
+    return(
+        <TouchableOpacity style={styles.cardContainer}>
+            <View style={styles.cardTitle}>
+                <Text style={styles.titleCard}>{title}</Text>
+                <Feather name="alert-triangle" style={styles.iconCard} />
+            </View>
+            <View style={styles.cardBody}>
+                <Text style={styles.textCard}>{contador}</Text>
+            </View>
+            <View style={styles.cardFooter}>
+                <Text style={styles.textFooter}>{footerText}</Text>
+            </View>
+        </TouchableOpacity>
+    )
+}
