@@ -1,15 +1,12 @@
-import React, { useState, useRef } from "react";
-import { View, TouchableOpacity, Animated, useWindowDimensions, TextInput } from "react-native";
 import { Entypo } from '@expo/vector-icons';
-import { s } from "./styles";
-import TextBody from "../TextBody";
+import React, { useRef, useState } from "react";
+import { Animated, TextInput, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { router } from "expo-router";
+import { colors } from "../../../styles/colors";
 import Button from "../Button";
 import ModalCustom from "../ModalCustom";
-import DropDownPicker from "react-native-dropdown-picker";
-import { colors } from "../../../styles/colors";
-import DateInput from "../InputDate";
+import TextBody from "../TextBody";
+import { s } from "./styles";
 
 
 type Props = {
@@ -89,7 +86,17 @@ const toggleExpand = () => {
   setExpanded(!expanded);
 };
 
+  const getStatusColor = () => {
+    const status = text_atividade?.toLowerCase();
+    if (status?.includes('finalizada')) return colors.statusColor.inactive;
+    if (status?.includes('em andamento')) return colors.statusColor.active;
+    return colors.statusColor.default;
+  };
 
+    const atividadeStyle = {
+    ...styles.cardFundoAtividade,
+    backgroundColor: getStatusColor()
+  };
 
   return (
     <>
@@ -103,14 +110,14 @@ const toggleExpand = () => {
 
           </View>
           <View style={containerStyle}>
-            <View style={{ marginRight: RFValue(40), flexDirection: 'row' }}>
+            <View style={{flexDirection: 'row' }}>
               <View style={styles.cardFundoAtividade}>
                 <TextBody variant="secondary">{text_maturidade}</TextBody>
               </View>
               <View style={styles.cardFundoAtividade}>
                 <TextBody variant="secondary">{text_grupo}</TextBody>
               </View>
-              <View style={styles.cardFundoAtividade}>
+              <View style={atividadeStyle}>
                 <TextBody variant="secondary">{text_atividade}</TextBody>
               </View>
             </View>

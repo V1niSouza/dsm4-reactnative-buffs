@@ -1,13 +1,18 @@
-import React from "react";
-import { s } from "./styles";
-import { View, TextInput,  } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useWindowDimensions } from 'react-native';
+import React from "react";
+import { TextInput, useWindowDimensions, View } from "react-native";
+import { s } from "./styles";
 
+// Adicione as tipagens para as props (opcional, mas recomendado)
+interface Props {
+  value: string;
+  onChangeText: (text: string) => void;
+}
 
-export default function BarSearch() {
+export default function BarSearch({ value, onChangeText }: Props) {
   const { width, height } = useWindowDimensions();
   const styles = s(width, height);
+
   return (
     <View style={styles.container}>
       <View style={styles.inputWrapper}>
@@ -16,6 +21,8 @@ export default function BarSearch() {
           placeholder="Pesquisa por nome ou tag..."
           placeholderTextColor="#999"
           style={styles.input}
+          value={value} // Valor controlado pelo estado do pai
+          onChangeText={onChangeText} // Atualiza o estado no pai
         />
       </View>
     </View>

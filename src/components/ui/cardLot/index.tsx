@@ -1,27 +1,24 @@
-import React, { useState, useRef } from "react";
-import { View, TouchableOpacity, Animated, useWindowDimensions, TextInput } from "react-native";
-import { Entypo } from '@expo/vector-icons';
-import { s } from "./styles";
-import TextBody from "../TextBody";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { TouchableOpacity, useWindowDimensions, View } from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
 import { RFValue } from "react-native-responsive-fontsize";
-import { router } from "expo-router";
+import { colors } from "../../../styles/colors";
 import Button from "../Button";
 import ModalCustom from "../ModalCustom";
-import DropDownPicker from "react-native-dropdown-picker";
-import { colors } from "../../../styles/colors";
-import DateInput from "../InputDate";
+import TextBody from "../TextBody";
 import TextoButton from "../TextButton";
-
+import { s } from "./styles";
 
 type Props = {
-
+  nomeLote: string;
+  grupo: string;
+  quantidade: string;
 };
 
-export default function CardLot({  }: Props) {
+export default function CardLot({ nomeLote, grupo, quantidade }: Props) {
   const { width, height } = useWindowDimensions();
   const styles = s(width, height);
-  const [expanded, setExpanded] = useState(false);
-  const [showContent, setShowContent] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [openInseminacao, setOpenInseminacao] = useState(false);
@@ -40,14 +37,16 @@ export default function CardLot({  }: Props) {
       <View>
         <View style={ styles.container }>
           <View style={styles.cardTitle}>
-            <View style={styles.cardPhoto} />
-            <TextBody>Grupo</TextBody>
+            <View style={styles.cardPhoto}>
+              <Ionicons name="leaf-outline" size={24} color={colors.black.base} />
+            </View>
+            <TextBody>{grupo}</TextBody>
             <TextBody variant="secondary">-</TextBody>
-            <TextBody variant="secondary">Lote 10</TextBody>
+            <TextBody variant="secondary">{nomeLote}</TextBody>
           </View>
           <View style={styles.cardBody}>
             <View style={styles.column}>
-              <TextBody variant="secondary">Quantidade de animais: 10</TextBody>
+              <TextBody variant="secondary">Quantidade de animais:  {quantidade}</TextBody>
             </View>
             <View style={styles.columnTwo}>
               <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.buttons}><TextoButton>Movimentação de lote</TextoButton></TouchableOpacity>

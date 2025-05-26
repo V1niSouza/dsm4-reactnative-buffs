@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -7,29 +6,28 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import BarSearch from "../components/ui/BarSearch";
-import TextoTitle from "../components/ui/TextoTitle";
-import Button from "../components/ui/Button";
-import CardBuffalo from "../components/ui/cardBufalo";
-import ModalCustom from "../components/ui/ModalCustom";
-import TextBody from "../components/ui/TextBody";
-import { colors } from "../styles/colors";
-
 import DropDownPicker from "react-native-dropdown-picker";
 import { RFValue } from "react-native-responsive-fontsize";
+import Button from "../components/ui/Button";
+import CardBuffalo from "../components/ui/cardBufalo";
 import DateInput from "../components/ui/InputDate";
+import ModalCustom from "../components/ui/ModalCustom";
+import TextBody from "../components/ui/TextBody";
+import TextoTitle from "../components/ui/TextoTitle";
+import { colors } from "../styles/colors";
+
+import BarSearch from "../components/ui/BarSearch";
+import { useAuth } from '../hooks/useAuth';
+import { getBuffalos } from '../services/buffaloService';
 
 export default function ScreenBufalos() {
-  const { width, height } = useWindowDimensions(); // Pega a dimensão do dispositivo
   const [modalVisible, setModalVisible] = useState(false);
-
   const [openSex, setOpenSex] = React.useState(false);
   const [valueSex, setValueSex] = React.useState(null);
   const [itemsSex, setItemsSex] = useState([
     { label: "Fêmea", value: "Fêmea" },
     { label: "Macho", value: "Macho" },
   ]);
-
   const [openMatur, setOpenMatur] = React.useState(false);
   const [valueMatur, setValueMatur] = React.useState(null);
   const [itemsMatur, setItemsMatur] = useState([
@@ -38,9 +36,48 @@ export default function ScreenBufalos() {
     { label: "Vaca", value: "Vaca" },
     { label: "Touro", value: "Touro" },
   ]);
-
   const [date, setDate] = useState(new Date());
   const [openDate, setOpenDate] = useState(false);
+
+  const { width, height } = useWindowDimensions(); // Pega a dimensão do dispositivo
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const { token } = useAuth(); 
+  const [buffalos, setBuffalos] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadBuffalos = async () => {
+      if (!token) { 
+        return;
+      }
+      try {
+        setLoading(true);
+        const data = await getBuffalos(token);
+        setBuffalos(data);
+      } catch (error) {
+        console.log('Erro:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadBuffalos();
+  }, [token]);
+
+  const filteredBuffalos = buffalos.filter(buffalo => 
+  buffalo.tag.toLowerCase().includes(searchTerm.toLowerCase()) || 
+  buffalo.nome.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
+
+  if (loading) {
+    return (
+      <SafeAreaView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <TextoTitle>Carregando búfalos...</TextoTitle>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, alignItems: "center" }}>
@@ -53,7 +90,7 @@ export default function ScreenBufalos() {
             justifyContent: "center",
           }}
         >
-          <BarSearch />
+          <BarSearch onChangeText={(text) => setSearchTerm(text)} value={searchTerm}/>
         </View>
         <View
           style={{
@@ -64,38 +101,28 @@ export default function ScreenBufalos() {
           }}
         >
           <View style={{ flexDirection: "row", gap: RFValue(100) }}>
-            <TextoTitle>6 Búfalos</TextoTitle>
+            <TextoTitle>{buffalos.length} Bubalinos</TextoTitle>
             <Button text="Novo" onPress={() => setModalVisible(true)} />
           </View>
         </View>
-        <View
-          style={{ width: width, alignItems: "center", marginTop: RFValue(10) }}
-        >
+        <View style={{ width: width, alignItems: "center", marginTop: RFValue(10) }}>
           <View style={{ marginBottom: RFValue(10) }}>
-            <CardBuffalo
-              text_tag={"BUF006"}
-              text_name={"Luna"}
-              text_sex={"Fêmea"}
-              text_grupo={"Gurpo A"}
-              text_localizacao={"Lote 1"}
-              text_maturidade={"Bezerro"}
-              text_peso={"400 KG"}
-              text_raca={"Murrah"}
-              text_saude={"Saudável"}
-              text_atividade={"Ativo"}
-            ></CardBuffalo>
-            <CardBuffalo
-              text_tag={"BUF006"}
-              text_name={"Luna"}
-              text_sex={"Fêmea"}
-              text_grupo={"Gurpo A"}
-              text_localizacao={"Lote 1"}
-              text_maturidade={"Bezerro"}
-              text_peso={"400 KG"}
-              text_raca={"Murrah"}
-              text_saude={"Saudável"}
-              text_atividade={"Ativo"}
-            ></CardBuffalo>
+            {filteredBuffalos.map((item) => (
+              <CardBuffalo
+                key={item._id}
+                id={item._id}
+                text_tag={item.tag}           
+                text_name={item.nome}           
+                text_sex={item.sexo}             
+                text_grupo={item.grupo}         
+                text_localizacao={item.localizacao}
+                text_maturidade={item.maturidade} 
+                text_peso={`${item.zootecnico[0]?.peso} KG`}  
+                text_raca={item.raca}          
+                text_saude={item.zootecnico?.condicaoCorporal?.[0]} 
+                text_atividade={item.atividade[0]?.status} 
+              />
+            ))}
           </View>
         </View>
       </ScrollView>

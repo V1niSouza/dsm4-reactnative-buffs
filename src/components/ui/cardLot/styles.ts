@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
-import { colors } from "../../../styles/colors";
 import { RFValue } from "react-native-responsive-fontsize";
+import { colors } from "../../../styles/colors";
 
 export const s = (width: number, height: number) => StyleSheet.create({
   container: {
@@ -49,8 +49,8 @@ export const s = (width: number, height: number) => StyleSheet.create({
     flexDirection: 'column',
   },
   buttons:{
-    backgroundColor: colors.gray.base,
-    width: '90%',
+    backgroundColor: colors.yellow.base,
+    width: '80%',
     height: '47%',
     borderRadius: RFValue(8),
     margin: RFValue(1),
@@ -58,10 +58,12 @@ export const s = (width: number, height: number) => StyleSheet.create({
     justifyContent: 'center'
   },
   cardPhoto: {
-    backgroundColor: colors.yellow.base,
+    backgroundColor: colors.statusColor.active,
     width: width * 0.09, // Largura
     height: width * 0.09, // Altura
     borderRadius: "60%",
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   cardFundoAtividade: {
     backgroundColor: colors.yellow.base,

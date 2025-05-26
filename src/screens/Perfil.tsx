@@ -1,29 +1,35 @@
-import React, { useState } from "react";
-import { ScrollView, TextInput, View, useWindowDimensions, StyleSheet, TouchableOpacity } from "react-native";
-import TextoTitle from "../../src/components/ui/TextoTitle";
+import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View, useWindowDimensions } from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
 import Button from "../../src/components/ui/Button";
 import ModalCustom from "../../src/components/ui/ModalCustom";
 import TextBody from "../../src/components/ui/TextBody";
+import TextoTitle from "../../src/components/ui/TextoTitle";
 import { colors } from "../../src/styles/colors";
-import DropDownPicker from "react-native-dropdown-picker";
 
-import { RFValue } from "react-native-responsive-fontsize";
-import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { RFValue } from "react-native-responsive-fontsize";
 import BarAlter from "../components/ui/BarAlter";
-import RadioButtonGroup from "../components/ui/RadioButton";
 import DateInput from "../components/ui/InputDate";
+import RadioButtonGroup from "../components/ui/RadioButton";
 
-export default function ScreenPerfil() {
+import { useAuth } from '../hooks/useAuth';
+import { Buffalo, getBuffaloById } from '../services/buffaloService';
+
+type Props = {
+    id: string;
+};
+
+export default function ScreenPerfil({id}: Props) {
   const { width, height } = useWindowDimensions(); // Pega a dimensão do dispositivo 
   const styles = s(width, height);
-  
+
   const [openSex, setOpenSex] = React.useState(false);
   const [valueSex, setValueSex] = React.useState(null);
   const [itemsSex, setItemsSex] = useState([
-      { label: "Ativo", value: "ativo" },
-      { label: "Abatido", value: "abatido" },
-      { label: "Vendido", value: "vendido" },
+      { label: "Ativa", value: "Ativa" },
+      { label: "Inativo", value: "Inativo" },
     ]);
   const [descricao, setDescricao] = useState("");
   const [active, setActive] = useState("zootecnico");
@@ -35,11 +41,45 @@ export default function ScreenPerfil() {
   const [modalZootecVisible, setModalZootecVisible] = useState(false);
   const [modalSanitVisible, setModalSanitVisible] = useState(false);
 
+
+  const { token } = useAuth(); 
+  const [buffalo, setBuffalo] = useState<Buffalo | null>(null);
+  const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  const loadBuffalo = async () => {
+    if (!token || !id) return;
+    
+    try {
+      setLoading(true);
+      const data: Buffalo = await getBuffaloById(id, token);
+      setBuffalo(data);
+    } catch (error) {
+      console.error('Erro ao carregar búfalo:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadBuffalo();
+}, [token, id]);
+
+const formatarData = (dataString: string | Date | undefined): string => {
+  if (!dataString) return 'Data não disponível';
+  
+  const data = new Date(dataString);
+  return data.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+};
+
   return ( 
         <View style={{backgroundColor: colors.gray.fundoInput}}>
             <ScrollView>
             <View style={{ width: width, marginTop: RFValue(10)}}>
-                <TouchableOpacity onPress={() => router.navigate("/bufalos")} style={{ paddingRight: 10, flexDirection: 'row', alignItems: 'center'}}>
+                <TouchableOpacity onPress={() => router.navigate("/scanner")} style={{ paddingRight: 10, flexDirection: 'row', alignItems: 'center'}}>
                     <Ionicons name="arrow-back" size={24} color={colors.black.base} />
                     <TextBody variant="secondary">Voltar para Búfalos</TextBody>
                 </TouchableOpacity>
@@ -48,40 +88,40 @@ export default function ScreenPerfil() {
                     <View  style={styles.container}>
                         <View style={[styles.row, { marginBottom: RFValue(10) }]}>
                             <View style={{flexDirection: "column" }}>
-                                <TextoTitle>BUF001</TextoTitle>
+                                <TextoTitle>{buffalo?.tag}</TextoTitle>
                             </View>
                         </View>
 
                         <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(10) }}>
                             <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                 <TextBody variant="secondary">Raça:</TextBody>
-                                <TextBody>Murrah</TextBody>
+                                <TextBody>{buffalo?.raca}</TextBody>
                             </View>
                             <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                 <TextBody variant="secondary">Peso:</TextBody>
-                                <TextBody>501 Kg</TextBody>                               
+                                <TextBody>{buffalo?.zootecnico[0]?.peso} Kg</TextBody>                               
                             </View>
                         </View>
 
                         <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(10) }}>
                             <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                 <TextBody variant="secondary">Maturidade:</TextBody>
-                                <TextBody>Bezerro</TextBody>
+                                <TextBody>{buffalo?.maturidade}</TextBody>
                             </View>
                             <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                 <TextBody variant="secondary">Data Nascimento:</TextBody>
-                                <TextBody>01/03/2023</TextBody>                               
+                                <TextBody>{buffalo?.atividade[0]?.dataAtualizacao ? formatarData(buffalo.atividade[0].dataAtualizacao): 'Sem data registrada'}</TextBody>                               
                             </View>
                         </View>
 
                         <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(15) }}>
                             <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                 <TextBody variant="secondary">Grupo:</TextBody>
-                                <TextBody>Bezerros</TextBody>
+                                <TextBody>{buffalo?.grupo}</TextBody>
                             </View>
                             <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                 <TextBody variant="secondary">Localização:</TextBody>
-                                <TextBody>Ordenha</TextBody>                               
+                                <TextBody>{buffalo?.localizacao}</TextBody>                               
                             </View>
                         </View>
                         <View style={{ flexDirection: 'row-reverse' ,marginBottom: RFValue(5) }}>
@@ -105,36 +145,38 @@ export default function ScreenPerfil() {
                                     <Button text={"Atualizar"} onPress={() => setModalZootecVisible(true)}></Button>
                                 </View>               
                             </View>
-                            <View style={{ backgroundColor: colors.gray.fundoInput, borderRadius: RFValue(10), padding: RFValue(10) }}>
+                            {buffalo?.zootecnico?.map((registro, index) => (
+                            <View key={`zoo-${registro._id}-${index}`}  style={{ backgroundColor: colors.gray.fundoInput, borderRadius: RFValue(10), padding: RFValue(10) }}>
                                 <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(10) }}>
                                     <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                         <TextBody variant="secondary">Funcionário responsável:</TextBody>
-                                        <TextBody>Chico</TextBody>
+                                        {buffalo?.zootecnico[0]?.funcionarios?.map(funcionario => (<TextBody key={funcionario._id}>{funcionario.nome}</TextBody>))}
                                     </View>
                                     <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                         <TextBody variant="secondary">Data Atualização:</TextBody>
-                                        <TextBody>31/02/2025</TextBody>                               
+                                        <TextBody>{formatarData(registro.dataAtualizacao)}</TextBody>                               
                                     </View>
                                 </View>
 
                                 <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(10) }}>
                                     <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                         <TextBody variant="secondary">Peso:</TextBody>
-                                        <TextBody>510 Kg</TextBody>
+                                        <TextBody>{registro.peso ? `${registro.peso} Kg` : 'N/A'}</TextBody>
                                     </View>
                                     <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                         <TextBody variant="secondary">Condição Corporal:</TextBody>
-                                        <TextBody>Boa</TextBody>                               
+                                        <TextBody>{registro.condicaoCorporal || 'N/A'}</TextBody>                               
                                     </View>
                                 </View>
 
                                 <View style={{ flexDirection: "row", marginBottom: RFValue(15) }}>
                                     <View style={{ flexDirection: "column", width: width * 0.8 }}>
                                         <TextBody variant="secondary">Descrição:</TextBody>
-                                        <TextBody>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </TextBody>
+                                        <TextBody>{registro.observacao|| 'Nenhuma Observacao'}</TextBody>
                                     </View>
                                 </View>
                             </View>
+                        ))}
                         </View>
                     )}
 
@@ -148,47 +190,52 @@ export default function ScreenPerfil() {
                                     <Button text={"Atualizar"} onPress={() => setModalSanitVisible(true)}></Button>
                                 </View>               
                             </View>
-                            <View style={{ backgroundColor: colors.gray.fundoInput, borderRadius: RFValue(10), padding: RFValue(10) }}>
+
+                            {buffalo?.sanitario?.map((registro, index) => (
+                            <View  key={`san-${registro._id}-${index}`} style={{ backgroundColor: colors.gray.fundoInput, borderRadius: RFValue(10), padding: RFValue(10) }}>
                                 <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(10) }}>
                                     <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                         <TextBody variant="secondary">Tipo Sanitário:</TextBody>
-                                        <TextBody>Vacina</TextBody>
+                                        <TextBody>{registro.tpSanitario || 'N/A'}</TextBody>
                                     </View>
                                     <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                         <TextBody variant="secondary">Data Atualização:</TextBody>
-                                        <TextBody>31/02/2025</TextBody>                               
+                                        <TextBody>{formatarData(registro.dataAplicacao)}</TextBody>                               
                                     </View>
                                 </View>
 
                                 <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(10) }}>
                                     <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                         <TextBody variant="secondary">Medicação Aplicada:</TextBody>
-                                        <TextBody>Novalgina</TextBody>
+                                        <TextBody>{registro.medicacaoAplicada || 'N/A'}</TextBody>
                                     </View>
                                     <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                         <TextBody variant="secondary">Dosagem:</TextBody>
-                                        <TextBody>5 ml</TextBody>                               
+                                        <TextBody>{registro.dosagem ? `${registro.dosagem} ${registro.unidadeMedidaDosagem}` : 'N/A'}</TextBody>                               
                                     </View>
                                 </View>
 
                                 <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(10) }}>
                                     <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                         <TextBody variant="secondary">Doença Combatida:</TextBody>
-                                        <TextBody>Verme</TextBody>
+                                        <TextBody>{registro.doencaCombatida || 'N/A'}</TextBody>
                                     </View>
                                 </View>
 
                                 <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(10) }}>
                                     <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                         <TextBody variant="secondary">Necessidade de retorno?</TextBody>
-                                        <TextBody>Sim</TextBody>
+                                        <TextBody>{registro.dataRetorno ? 'Sim' : 'Não'}</TextBody>
                                     </View>
+                                    {registro.dataRetorno && (
                                     <View style={{ flexDirection: "column", width: width * 0.4, height: height * 0.05 }}>
                                         <TextBody variant="secondary">Data Retorno:</TextBody>
-                                        <TextBody>15/01/2024</TextBody>                               
+                                        <TextBody>{formatarData(registro.dataRetorno)}</TextBody>                               
                                     </View>
+                                    )}
                                 </View>
                             </View>
+                                ))}
                         </View>
                     )}
             </View> 

@@ -65,6 +65,7 @@ export default function ScreenScanner() {
             {buffaloData ? (
               <CardBuffalo
                 text_tag={buffaloData.tag}
+                id={buffaloData._id}
                 text_name={buffaloData.nome}
                 text_sex={buffaloData.sexo}
                 text_grupo={buffaloData.grupo}

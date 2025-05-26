@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
-import { colors } from "../../../styles/colors";
 import { RFValue } from "react-native-responsive-fontsize";
+import { colors } from "../../../styles/colors";
 
 export const s = (width: number, height: number) =>
   StyleSheet.create({
@@ -36,7 +36,7 @@ export const s = (width: number, height: number) =>
       height: "55%", // Altura
       alignItems: "center",
       justifyContent: "space-between",
-      paddingStart: RFValue(20),
+      paddingStart: RFValue(10),
       flexDirection: "row",
       borderBottomEndRadius: 10,
       borderBottomLeftRadius: 10,
@@ -72,14 +72,13 @@ export const s = (width: number, height: number) =>
       borderColor: "#000",
       alignItems: "center", // Centraliza Div filha
       flexDirection: "row-reverse",
-      gap: RFValue(3)
     },
     cardFundoAtividade: {
       backgroundColor: colors.yellow.base,
-      marginRight: RFValue(10),
+      marginRight: RFValue(5),
       borderRadius: RFValue(20), // bordas mais arredondadas
       height: RFValue(20), // altura fixa ou baseada em contexto
-      paddingHorizontal: RFValue(12), // padding lateral
+      paddingHorizontal: RFValue(10), // padding lateral
       justifyContent: "center", // centraliza o conteúdo verticalmente
     },
   });

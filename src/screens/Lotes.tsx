@@ -1,15 +1,11 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
   TextInput,
-  TouchableOpacity,
   View,
-  useWindowDimensions,
+  useWindowDimensions
 } from "react-native";
-import BarSearch from "../components/ui/BarSearch";
-import TextoTitle from "../components/ui/TextoTitle";
 import Button from "../components/ui/Button";
 import ModalCustom from "../components/ui/ModalCustom";
 import TextBody from "../components/ui/TextBody";
@@ -17,11 +13,9 @@ import { colors } from "../styles/colors";
 
 import DropDownPicker from "react-native-dropdown-picker";
 import { RFValue } from "react-native-responsive-fontsize";
-import DateInput from "../components/ui/InputDate";
-import CardReproducao from "../components/ui/cardReprod";
-import LayoutSex from "../components/ui/Layout/layoutSex";
-import CardDuble from "../components/ui/CardDuble";
 import CardLot from "../components/ui/cardLot";
+import { useAuth } from "../hooks/useAuth";
+import { getLotsWithBuffalos } from "../services/LoteService";
 
 export default function ScreenLotes() {
   const { width, height } = useWindowDimensions(); // Pega a dimensão do dispositivo
@@ -37,15 +31,43 @@ export default function ScreenLotes() {
   const [date, setDate] = useState(new Date());
   const [openDate, setOpenDate] = useState(false);
 
+  const { token } = useAuth(); 
+  const [buffalos, setBuffalos] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadBuffalos = async () => {
+      if (!token) { 
+        return;
+      }
+      try {
+        setLoading(true);
+        const data = await getLotsWithBuffalos(token);
+        setBuffalos(data.lots || []);
+      } catch (error) {
+        console.log('Erro:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadBuffalos();
+  }, [token]);
+
   return (
     <SafeAreaView style={{ flex: 1, alignItems: "center" }}>
       <ScrollView contentContainerStyle={{ paddingBottom: RFValue(30), paddingTop: RFValue(30) }}>
         <View style={{ width: width, height: height * 0.05, alignItems: "flex-end", justifyContent: "center", paddingHorizontal: RFValue(10) }}>
             <Button text="Novo" onPress={() => setModalVisible(true)} />
         </View>
-        <View style={{ width: width, alignItems: "center", marginTop: RFValue(10) }}>
-            <CardLot/>
-        </View>
+          {buffalos.filter((item) => item.status === 'Em uso').map((item) => (
+            <View key={item._id} style={{ width: width, alignItems: "center", marginTop: RFValue(10) }}>
+                <CardLot
+                  nomeLote={item.buffalos?.[0]?.localizacao} 
+                  grupo={item.buffalos?.[0]?.grupo} 
+                  quantidade={item.buffalos?.length || 0} />
+            </View>
+          ))}
       </ScrollView>
 
       <ModalCustom visible={modalVisible} onClose={() => setModalVisible(false)} title={"Cadastrando novo Lote:"}>

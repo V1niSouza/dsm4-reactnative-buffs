@@ -1,18 +1,17 @@
-import React from "react";
-import { Platform } from "react-native";
-import { Link, Tabs } from "expo-router";
-import { Pressable } from "react-native";
+import { useAuth } from "@/src/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
-import { colors } from "../../src/styles/colors";
-import { RFValue } from "react-native-responsive-fontsize";
-
-export default function LayoutAbas() {
+import { Tabs } from "expo-router";
+import React from "react";
+import { Platform, TouchableOpacity } from "react-native";
+import { colors } from "../../../src/styles/colors";
+export default function LayoutAbas() {  
+    const { signOut } = useAuth();
   return (
     <Tabs
       screenOptions={{
         // --- CABEÇALHO (HEADER) ---
         headerStyle: {
-          height: Platform.OS === "ios" ? 70 : 60,
+          height: Platform.OS === "ios" ? 90 : 80,
           backgroundColor: colors.yellow.base,
         },
         headerTitleStyle: {
@@ -25,7 +24,7 @@ export default function LayoutAbas() {
 
         // --- BARRA DE ABAS (TAB BAR) ---
         tabBarStyle: {
-          height: Platform.OS === "ios" ? 65 : 65,
+          height: Platform.OS === "ios" ? 85 : 85,
           paddingBottom: Platform.OS === "ios" ? 10 : 5,
           paddingTop: 5,
         },
@@ -49,6 +48,12 @@ export default function LayoutAbas() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
+        headerRight: () => (
+            <TouchableOpacity
+              onPress={() => signOut()} style={{ marginRight: 15, marginTop: 10 }}>
+              <Ionicons name="log-out-outline" size={30} color={colors.black.base} />
+            </TouchableOpacity>
+          ),
         }}
       />
 
@@ -67,7 +72,7 @@ export default function LayoutAbas() {
         options={{
           title: "Búfalos",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="document-text" size={size} color={color} />
+            <Ionicons name="paw-outline" size={size} color={color} />
           ),
         }}
       />
@@ -77,7 +82,7 @@ export default function LayoutAbas() {
         options={{
           title: "Reprodução",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="document-text" size={size} color={color} />
+            <Ionicons name="sync-outline" size={size} color={color} />
           ),
         }}
       />   
@@ -87,7 +92,7 @@ export default function LayoutAbas() {
         options={{
           title: "Lactação",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="document-text" size={size} color={color} />
+            <Ionicons name="water-outline" size={size} color={color} />
           ),
         }}
       />
@@ -97,7 +102,7 @@ export default function LayoutAbas() {
         options={{
           title: "Lotes",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="document-text" size={size} color={color} />
+            <Ionicons name="grid-outline" size={size} color={color} />
           ),
         }}
       />   

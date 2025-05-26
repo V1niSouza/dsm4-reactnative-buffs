@@ -1,15 +1,15 @@
-import React, { useState, useRef } from "react";
-import { View, TouchableOpacity, Animated, useWindowDimensions, TextInput, ScrollView } from "react-native";
 import { Entypo } from '@expo/vector-icons';
-import { s } from "./styles";
-import TextBody from "../TextBody";
-import { RFValue } from "react-native-responsive-fontsize";
-import TextoButton from "../TextButton";
 import { router } from "expo-router";
+import React, { useRef, useState } from "react";
+import { Animated, TouchableOpacity, useWindowDimensions, View } from "react-native";
+import { RFValue } from "react-native-responsive-fontsize";
+import { colors } from "../../../styles/colors";
 import Button from "../Button";
-
+import TextBody from "../TextBody";
+import { s } from "./styles";
 
 type Props = {
+  id: string,
   text_tag: string,
   text_name: string,
   text_sex: string,
@@ -19,27 +19,14 @@ type Props = {
   text_localizacao: string,
   text_atividade: string,
   text_peso: string,
-  text_raca: string
+  text_raca: string,
 };
 
-export default function CardBuffalo({ text_tag, text_name, text_sex, text_maturidade, text_grupo, text_localizacao, text_atividade, text_raca, text_peso}: Props) {
+export default function CardBuffalo({ id, text_tag, text_name, text_sex, text_maturidade, text_grupo, text_localizacao, text_atividade, text_raca, text_peso}: Props) {
   const { width, height } = useWindowDimensions();
   const styles = s(width, height);
-  const [modalVisibleZootecnico, setModalVisibleZootecnico] = useState(false);
-  const [modalVisibleSanitario, setModalVisibleSanitario] = useState(false);
-  const [modalVisibleAtividade, setModalVisibleAtividade] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [showContent, setShowContent] = useState(false);
-
-  const [openSex, setOpenSex] = React.useState(false);
-  const [valueSex, setValueSex] = React.useState(null);
-  const [itemsSex, setItemsSex] = useState([
-    { label: 'Ativo', value: 'Ativo' },
-    { label: 'Descartado', value: 'Descarte' }
-  ]);
-
-  const [date, setDate] = useState(new Date());
-  const [openDate, setOpenDate] = useState(false);
 
   // altura do corpo extra quando expandido 
   const EXTRA_HEIGHT = height * 0.16;
@@ -82,7 +69,17 @@ const toggleExpand = () => {
 };
 
 
+  const getStatusColor = () => {
+    const status = text_atividade?.toLowerCase();
+    if (status?.includes('ativa')) return colors.statusColor.active;
+    if (status?.includes('inativo')) return colors.statusColor.inactive;
+    return colors.statusColor.default;
+  };
 
+    const atividadeStyle = {
+    ...styles.cardFundoAtividade,
+    backgroundColor: getStatusColor()
+  };
   return (
     <>
       <TouchableOpacity onPress={toggleExpand} activeOpacity={1} >
@@ -102,7 +99,7 @@ const toggleExpand = () => {
               <View style={styles.cardFundoAtividade}>
                 <TextBody variant="secondary">{text_maturidade}</TextBody>
               </View>
-              <View style={styles.cardFundoAtividade}>
+              <View style={atividadeStyle}>
                 <TextBody variant="secondary">{text_atividade}</TextBody>
               </View>
             </View>
@@ -149,7 +146,7 @@ const toggleExpand = () => {
                 </View>
                 <View>
                     <View style={styles.cardActions}>
-                        <Button text={"Abrir Perfil"} onPress={() => router.navigate("/perfil")}></Button>
+                        <Button text={"Abrir Perfil"}  onPress={() => router.navigate({pathname:"/perfil", params:{ id }})}></Button>
                     </View>
                 </View>
             </View>

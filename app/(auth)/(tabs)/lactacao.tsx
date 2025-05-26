@@ -1,4 +1,4 @@
-import ScreenLactacao from "../../src/screens/Lactacao";
+import ScreenLactacao from "../../../src/screens/Lactacao";
 
 export default function Lactacao(){
   return( <ScreenLactacao />)

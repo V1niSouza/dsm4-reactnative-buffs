@@ -1,78 +1,109 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
   TextInput,
-  TouchableOpacity,
   View,
-  useWindowDimensions,
+  useWindowDimensions
 } from "react-native";
 import BarSearch from "../components/ui/BarSearch";
-import TextoTitle from "../components/ui/TextoTitle";
 import Button from "../components/ui/Button";
 import ModalCustom from "../components/ui/ModalCustom";
 import TextBody from "../components/ui/TextBody";
+import TextoTitle from "../components/ui/TextoTitle";
 import { colors } from "../styles/colors";
 
-import DropDownPicker from "react-native-dropdown-picker";
 import { RFValue } from "react-native-responsive-fontsize";
-import DateInput from "../components/ui/InputDate";
-import CardReproducao from "../components/ui/cardReprod";
-import LayoutSex from "../components/ui/Layout/layoutSex";
 import CardDuble from "../components/ui/CardDuble";
 import CardLactacao from "../components/ui/cardLac";
+import DateInput from "../components/ui/InputDate";
+import LayoutSex from "../components/ui/Layout/layoutSex";
+
+import { useAuth } from "../hooks/useAuth";
+import { getAllLactations } from "../services/lactationService";
+import { getAllProductions } from "../services/productionService";
 
 export default function ScreenLactacao() {
   const { width, height } = useWindowDimensions(); // Pega a dimensão do dispositivo
   const [modalVisible, setModalVisible] = useState(false);
-
-  const [showAdditional, setShowAdditional] = useState(false);
-  const [openStatus, setOpenStatus] = useState(false);
-  const [valueStatus, setValueStatus] = useState(null);
-  const [itemsStatus, setItemsStatus] = useState([
-    { label: "Monta Natural", value: "Monta Natural" },
-    { label: "Inseminação Artificial", value: "IA" },
-    { label: "I.A Forçada", value: "IATF" },
-  ]);
-  
-  const [openInseminacao, setOpenInseminacao] = useState(false);
-  const [valueInseminacao, setValueInseminacao] = useState(null);
-  const [itemsInseminacao, setItemsInseminacao] = useState([
-    { label: "Cio", value: "cio" },
-    { label: "Prenha", value: "prenha" },
-    { label: "Finalizada", value: "finalizada" },
-]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [date, setDate] = useState(new Date());
   const [openDate, setOpenDate] = useState(false);
+  
+  const { token } = useAuth(); 
+  const [lactations, setLactations] = useState<any[]>([]);
+  const [productions, setProductions] = useState<any[]>([]);
 
+  useEffect(() => {
+    const loadData = async () => {
+      if (!token) return; 
+      try {
+        const data = await getAllLactations(token);
+        setLactations(data);
+      } catch (error) {
+        console.error("Erro ao carregar as lactações:", error);
+      }
+    };
+    loadData();
+  }, [token]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (!token) return; 
+      try {
+        const data = await getAllProductions(token);
+        setProductions(data);
+      } catch (error) {
+        console.error("Erro ao carregar as produções:", error);
+      }
+    };
+    loadData();
+  }, [token]);
+
+      const filteredBuffalos = lactations.filter(buffalo => 
+  buffalo.tagBufala.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const formatarData = (dataString: string | Date | undefined): string => {
+    if (!dataString) return 'Data não disponível';
+    
+    const data = new Date(dataString);
+    return data.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+  
   return (
     <SafeAreaView style={{ flex: 1, alignItems: "center" }}>
       <ScrollView contentContainerStyle={{ paddingBottom: RFValue(30) }}>
         <View style={{ width: width, height: height * 0.2, alignItems: "center", justifyContent: "center" }}>
           <LayoutSex>
-            <CardDuble title="Estoque" contador="3 L."></CardDuble>
-            <CardDuble title="Ultima Retirada" contador="3 L."></CardDuble>
+            <CardDuble title="Estoque" styleIcon="estoque" contador={productions[0]?.estoqueAtual ?? 0}></CardDuble>
+            <CardDuble title="Ultima Retirada" styleIcon="retirada" contador={`${productions[0]?.coletas[0]?.quantidadeColetada ?? 0}`}></CardDuble>
           </LayoutSex>
-          <BarSearch />
+          <BarSearch onChangeText={(text) => setSearchTerm(text)} value={searchTerm}/>
         </View>
         <View style={{ width: width, height: height * 0.05, alignItems: "center", justifyContent: "center" }}>
           <View style={{ flexDirection: "row", gap: RFValue(100) }}>
-            <TextoTitle>6 Búfalos</TextoTitle>
+            <TextoTitle>{lactations.length} Registros</TextoTitle>
             <Button text="Novo" onPress={() => setModalVisible(true)} />
           </View>
         </View>
         <View style={{ width: width, alignItems: "center", marginTop: RFValue(10) }}>
           <View style={{ marginBottom: RFValue(10) }}>
-            <CardLactacao 
-              text_tag={"BUF006"}
-              text_name={"Luna"}
-              text_maturidade={"Bezerro"}
-              text_atividade={"Cio"}
-              text_dataAtt={"11/02/2024"}
-              text_localizacao={"Lote 1"}
-              text_grupo={"Gurpo A"}
-            />
+            {filteredBuffalos.map((item, index) => (
+              <CardLactacao 
+                key={index}
+                text_tag={item.tagBufala}
+                text_name={item.buffalo?.nome}
+                text_maturidade={item.buffalo?.maturidade}
+                text_atividade={item.status}
+                text_dataAtt={item.dataAtualizacao ? formatarData(item.dataAtualizacao): 'Sem data registrada'}
+                text_localizacao={item.buffalo?.localizacao}
+                text_grupo={item.buffalo?.grupo}
+              />
+              ))}
           </View>
         </View>
       </ScrollView>

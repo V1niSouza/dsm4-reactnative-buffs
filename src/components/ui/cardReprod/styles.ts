@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
-import { colors } from "../../../styles/colors";
 import { RFValue } from "react-native-responsive-fontsize";
+import { colors } from "../../../styles/colors";
 
 export const s = (width: number, height: number) =>
   StyleSheet.create({

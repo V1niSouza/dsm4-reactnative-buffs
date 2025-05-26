@@ -15,5 +15,16 @@ export const colors = {
         clean: "#737270",
         fundo: "#b3b3b3",
         fundoInput: "#f2f2f2"
+    },
+    statusColor:{
+        active: '#dcfce8',
+        inactive: '#ffe3e3',
+        default: '#fef3c7'
+    },
+    typeCard:{
+        fem: '#fde2e4',
+        mac: '#dbeafe',
+        est: '#dcfce8',
+        ret: '#fef3c7'
     }
 }

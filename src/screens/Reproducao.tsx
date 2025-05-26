@@ -1,30 +1,32 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
   TextInput,
-  TouchableOpacity,
   View,
-  useWindowDimensions,
+  useWindowDimensions
 } from "react-native";
 import BarSearch from "../components/ui/BarSearch";
-import TextoTitle from "../components/ui/TextoTitle";
 import Button from "../components/ui/Button";
 import ModalCustom from "../components/ui/ModalCustom";
 import TextBody from "../components/ui/TextBody";
+import TextoTitle from "../components/ui/TextoTitle";
 import { colors } from "../styles/colors";
 
 import DropDownPicker from "react-native-dropdown-picker";
 import { RFValue } from "react-native-responsive-fontsize";
 import DateInput from "../components/ui/InputDate";
 import CardReproducao from "../components/ui/cardReprod";
-import { Entypo } from "@expo/vector-icons";
+import { useAuth } from "../hooks/useAuth";
+import { getAllReproductions } from "../services/reproductionService";
 
 export default function ScreenReproducao() {
   const { width, height } = useWindowDimensions(); // Pega a dimensão do dispositivo
-  const [modalVisible, setModalVisible] = useState(false);
 
+  const [searchTerm, setSearchTerm] = useState('');
+
+
+  const [modalVisible, setModalVisible] = useState(false);
   const [showAdditional, setShowAdditional] = useState(false);
   const [openStatus, setOpenStatus] = useState(false);
   const [valueStatus, setValueStatus] = useState(null);
@@ -33,7 +35,6 @@ export default function ScreenReproducao() {
     { label: "Inseminação Artificial", value: "IA" },
     { label: "I.A Forçada", value: "IATF" },
   ]);
-  
   const [openInseminacao, setOpenInseminacao] = useState(false);
   const [valueInseminacao, setValueInseminacao] = useState(null);
   const [itemsInseminacao, setItemsInseminacao] = useState([
@@ -43,6 +44,37 @@ export default function ScreenReproducao() {
 ]);
   const [date, setDate] = useState(new Date());
   const [openDate, setOpenDate] = useState(false);
+
+  const { token } = useAuth(); 
+  const [reproducoes, setReproducoes] = useState<any[]>([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (!token) return; 
+      try {
+        const data = await getAllReproductions(token);
+        setReproducoes(data);
+      } catch (error) {
+        console.error("Erro ao carregar as reproduções:", error);
+      }
+    };
+    loadData();
+  }, [token]);
+  
+    const filteredBuffalos = reproducoes.filter(buffalo => 
+  buffalo.tagBufala.toLowerCase().includes(searchTerm.toLowerCase()));
+
+
+  const formatarData = (dataString: string | Date | undefined): string => {
+    if (!dataString) return 'Data não disponível';
+    
+    const data = new Date(dataString);
+    return data.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, alignItems: "center" }}>
@@ -55,27 +87,30 @@ export default function ScreenReproducao() {
             justifyContent: "center",
           }}
         >
-          <BarSearch />
+          <BarSearch onChangeText={(text) => setSearchTerm(text)} value={searchTerm}/>
         </View>
         <View style={{ width: width, height: height * 0.05, alignItems: "center", justifyContent: "center" }}>
           <View style={{ flexDirection: "row", gap: RFValue(100) }}>
-            <TextoTitle>6 Búfalos</TextoTitle>
+            <TextoTitle>{reproducoes.length} Registros</TextoTitle>
             <Button text="Novo" onPress={() => setModalVisible(true)} />
           </View>
         </View>
         <View style={{ width: width, alignItems: "center", marginTop: RFValue(10) }}>
           <View style={{ marginBottom: RFValue(10) }}>
-            <CardReproducao 
-              text_tag={"BUF006"}
-              text_name={"Luna"}
-              text_sex={"Fêmea"}
-              text_maturidade={"Bezerro"}
-              text_atividade={"Cio"}
-              text_dataAtt={"11/02/2024"}
-              text_raca={"Murrah"}
-              text_localizacao={"Lote 1"}
-              text_grupo={"Gurpo A"}
-            />
+            {filteredBuffalos.map((item, index) => (
+              <CardReproducao 
+                key={index}
+                text_tag={item.tagBufala}
+                text_name={item.buffalo?.nome}
+                text_sex={item.buffalo?.sexo}
+                text_maturidade={item.buffalo?.maturidade}
+                text_atividade={item.status}
+                text_dataAtt={item.dataStatus ? formatarData(item.dataStatus): 'Sem data registrada'}
+                text_raca={item.buffalo?.raca}
+                text_localizacao={item.buffalo?.localizacao}
+                text_grupo={item.buffalo?.grupo}
+              />
+            ))}
           </View>
         </View>
       </ScrollView>
