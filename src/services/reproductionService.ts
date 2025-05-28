@@ -90,3 +90,20 @@ export const getOneReproduction = async (id: string, token: string): Promise<Rep
     throw error;
   }
 };
+
+export const postReproduction = async (data: any, token: string): Promise<any> => {
+  const response = await fetch(`${API_URL}/reproduction`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Erro ao criar Reprodução');
+  }
+  return await response.json();
+};

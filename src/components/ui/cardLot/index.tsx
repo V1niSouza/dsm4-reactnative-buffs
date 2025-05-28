@@ -1,13 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { TouchableOpacity, useWindowDimensions, View } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
-import { RFValue } from "react-native-responsive-fontsize";
+import { useWindowDimensions, View } from "react-native";
 import { colors } from "../../../styles/colors";
-import Button from "../Button";
-import ModalCustom from "../ModalCustom";
 import TextBody from "../TextBody";
-import TextoButton from "../TextButton";
 import { s } from "./styles";
 
 type Props = {
@@ -48,56 +43,9 @@ export default function CardLot({ nomeLote, grupo, quantidade }: Props) {
             <View style={styles.column}>
               <TextBody variant="secondary">Quantidade de animais:  {quantidade}</TextBody>
             </View>
-            <View style={styles.columnTwo}>
-              <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.buttons}><TextoButton>Movimentação de lote</TextoButton></TouchableOpacity>
-              <TouchableOpacity style={styles.buttons}><TextoButton>Definição de alimentação</TextoButton></TouchableOpacity>
-            </View>
           </View>
         </View>
-      </View>
-
-         <ModalCustom visible={modalVisible} onClose={() => setModalVisible(false)} title={"Mover grupo de lote:"}>
-          <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(5) }}>
-            <View style={{ flexDirection: "column", width: width * 0.42, height: height * 0.054 }}>
-              <TextBody variant="secondary">Grupo:</TextBody>
-              <TextBody>Lactando</TextBody>
-            </View>
-          </View>
-          <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(30) }}>
-            <View style={{ flexDirection: "column", width: width * 0.88, height: height * 0.05 }}>
-              <TextBody>Mover para o Lote:</TextBody>
-              <DropDownPicker
-                open={openInseminacao}
-                value={valueInseminacao}
-                items={itemsInseminacao}
-                setOpen={setOpenInseminacao}
-                setValue={setValueInseminacao}
-                setItems={setItemsInseminacao}
-                placeholder="Selecione"
-                containerStyle={{
-                  width: "100%",
-                  height: RFValue(40),
-                  marginBottom: RFValue(0),
-                }}
-                style={{
-                  borderColor: colors.gray.base,
-                  backgroundColor: colors.gray.fundoInput,
-                  borderRadius: RFValue(10),
-                }}
-                dropDownContainerStyle={{
-                  backgroundColor: colors.gray.fundoInput,
-                  borderColor: colors.gray.base,
-                  borderRadius: RFValue(10),
-                }}
-              />
-            </View>
-          </View>
-          <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(20) }}>
-            <View style={{ flexDirection: "column", width: width * 0.88, height: height * 0.05 }}>
-              <Button text={"Atualizar dados"}></Button>
-            </View>
-          </View>
-      </ModalCustom>     
+      </View>    
     </>
   );
 }

@@ -14,6 +14,7 @@ import { colors } from "../styles/colors";
 import DropDownPicker from "react-native-dropdown-picker";
 import { RFValue } from "react-native-responsive-fontsize";
 import CardLot from "../components/ui/cardLot";
+import TextoTitle from "../components/ui/TextoTitle";
 import { useAuth } from "../hooks/useAuth";
 import { getLotsWithBuffalos } from "../services/LoteService";
 
@@ -54,16 +55,21 @@ export default function ScreenLotes() {
     loadBuffalos();
   }, [token]);
 
+  if (loading) {
+    return (
+      <SafeAreaView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <TextoTitle>Carregando Produções...</TextoTitle>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, alignItems: "center" }}>
       <ScrollView contentContainerStyle={{ paddingBottom: RFValue(30), paddingTop: RFValue(30) }}>
-        <View style={{ width: width, height: height * 0.05, alignItems: "flex-end", justifyContent: "center", paddingHorizontal: RFValue(10) }}>
-            <Button text="Novo" onPress={() => setModalVisible(true)} />
-        </View>
           {buffalos.filter((item) => item.status === 'Em uso').map((item) => (
             <View key={item._id} style={{ width: width, alignItems: "center", marginTop: RFValue(10) }}>
                 <CardLot
-                  nomeLote={item.buffalos?.[0]?.localizacao} 
+                  nomeLote={`Lote: ${item.buffalos?.[0]?.localizacao}`} 
                   grupo={item.buffalos?.[0]?.grupo} 
                   quantidade={item.buffalos?.length || 0} />
             </View>

@@ -6,14 +6,14 @@ export const s = (width: number, height: number) => StyleSheet.create({
   container: {
       backgroundColor: colors.white.base,
       width: width*0.93, // Largura
-      height: height*0.21, // Altura 
+      height: height*0.09, // Altura 
       borderRadius: 10,
       elevation: 5 // Sombra
   },
   cardTitle: {
     backgroundColor: colors.white.base,
     width: "100%", // Largura
-    height: "30%", // Altura
+    height: "60%", // Altura
     borderColor: "#000",
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
@@ -26,7 +26,7 @@ export const s = (width: number, height: number) => StyleSheet.create({
   cardBody: {
     backgroundColor: colors.white.base,
     width: "100%", // Largura
-    height: "70%", // Altura
+    height: "40%", // Altura
     paddingHorizontal: RFValue(5),
     paddingVertical: RFValue(2),
     flexDirection: "column",
@@ -35,7 +35,7 @@ export const s = (width: number, height: number) => StyleSheet.create({
   },
   column:{
     width: '100%',
-    height: '30%',
+    height: '100%',
     alignItems: 'center',
     paddingHorizontal: RFValue(10),
     flexDirection: 'row',

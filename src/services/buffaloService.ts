@@ -7,9 +7,9 @@ interface Funcionario {
 }
 
 interface Atividade {
-  status: "Ativa" | "Inativa" | string;
+  status: string;
   dataAtualizacao: string | Date;
-  _id: string;
+  observacao: string;
 }
 
 interface Zootecnico {
@@ -17,7 +17,7 @@ interface Zootecnico {
   condicaoCorporal: string;
   dataAtualizacao: string | Date;
   funcionarioResponsavel: string[];
-  observacao: string[]
+  observacao: string[];
   _id: string;
   funcionarios?: Funcionario[]; // Adicionado para armazenar os dados completos
 }
@@ -26,6 +26,7 @@ interface Sanitario {
   tpSanitario: string;
   medicacaoAplicada: string;
   dataAplicacao: string | Date;
+  proximoRetorno: string;
   dataRetorno?: string | Date;
   dosagem: number;
   unidadeMedidaDosagem: string;
@@ -46,7 +47,7 @@ export interface Buffalo {
   tagMae?: string;
   localizacao: string;
   grupo: string;
-  atividade: Atividade[];
+  atividade: Atividade [];
   zootecnico: Zootecnico[];
   sanitario: Sanitario[];
   __v?: number;
@@ -142,3 +143,42 @@ export const getBuffalos = async (token: string): Promise<Buffalo[]> => {
   const data = await response.json();
   return data.buffalos;
 };
+
+export const updateBuffalo = async (id: string, data: any, token: string): Promise<any> => {
+  try {
+    const response = await fetch(`${API_URL}/buffalo/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Erro ao atualizar búfalo');
+    }
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postBuffalo = async (data: any, token: string): Promise<any> => {
+  const response = await fetch(`${API_URL}/buffalo`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Erro ao criar búfalo');
+  }
+  return await response.json();
+};
+

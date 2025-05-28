@@ -12,17 +12,18 @@ import { RFValue } from "react-native-responsive-fontsize";
 import CardScannerTop from "../../src/components/ui/CardScannerTop";
 import TextoTitle from "../../src/components/ui/TextoTitle";
 import CardBuffalo from "../../src/components/ui/cardBufalo";
+import { useAuth } from "../hooks/useAuth";
 
 export default function ScreenScanner() {
   const { width, height } = useWindowDimensions();
-
+  const { token } = useAuth(); 
   const [buffaloData, setBuffaloData] = useState<any | null>(null);
   const [loadingBuffalo, setLoadingBuffalo] = useState(false);
 
   const fetchBuffaloData = async (id: string) => {
     setLoadingBuffalo(true);
     try {
-      const response = await fetch(`http://192.168.1.73:5000/buffalo/${id}`);
+      const response = await fetch(`https://dsm4-buffs-api.vercel.app/buffalo/${id}`, {headers:{'Authorization': `Bearer ${token}`}});
       if (response.ok) {
         const data = await response.json();
         setBuffaloData(data.buffalo);

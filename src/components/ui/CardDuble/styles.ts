@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
-import { colors } from "../../../styles/colors";
 import { RFValue } from "react-native-responsive-fontsize";
+import { colors } from "../../../styles/colors";
 
 export const s = (width: number, height: number) => StyleSheet.create({
     cardContainer:{
@@ -28,9 +28,8 @@ export const s = (width: number, height: number) => StyleSheet.create({
         height: '65%', // Altura 
         borderBottomRightRadius: RFValue(10),
         borderBottomLeftRadius: RFValue(10),
-        justifyContent: 'flex-start',
         alignItems: 'center',
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     cardPhoto: {
         backgroundColor: '#DCDCDC',
@@ -53,11 +52,12 @@ export const s = (width: number, height: number) => StyleSheet.create({
     },
     textCard:{
         color: colors.black.base,
-        fontSize: RFValue(30),
+        fontSize: RFValue(28),
         fontWeight: 'bold',
         fontStyle: 'normal',
         letterSpacing: 0.2,
-        marginStart: 30
+        marginStart: RFValue(2),
+        marginBottom: RFValue(10)
     },
     iconCard:{
         color: 'black',

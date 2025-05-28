@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  RefreshControl,
   SafeAreaView,
   ScrollView,
   TextInput,
@@ -10,7 +11,6 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { RFValue } from "react-native-responsive-fontsize";
 import Button from "../components/ui/Button";
 import CardBuffalo from "../components/ui/cardBufalo";
-import DateInput from "../components/ui/InputDate";
 import ModalCustom from "../components/ui/ModalCustom";
 import TextBody from "../components/ui/TextBody";
 import TextoTitle from "../components/ui/TextoTitle";
@@ -18,10 +18,19 @@ import { colors } from "../styles/colors";
 
 import BarSearch from "../components/ui/BarSearch";
 import { useAuth } from '../hooks/useAuth';
-import { getBuffalos } from '../services/buffaloService';
+import { getBuffalos, postBuffalo } from '../services/buffaloService';
 
 export default function ScreenBufalos() {
+  const { width, height } = useWindowDimensions(); // Pega a dimensão do dispositivo
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const { token } = useAuth(); 
+  const [buffalos, setBuffalos] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [modalVisible, setModalVisible] = useState(false);
+  const [tag, setTag] = React.useState<string>('');
+  const [nome, setNome] = React.useState<string>('');
   const [openSex, setOpenSex] = React.useState(false);
   const [valueSex, setValueSex] = React.useState(null);
   const [itemsSex, setItemsSex] = useState([
@@ -36,15 +45,19 @@ export default function ScreenBufalos() {
     { label: "Vaca", value: "Vaca" },
     { label: "Touro", value: "Touro" },
   ]);
-  const [date, setDate] = useState(new Date());
-  const [openDate, setOpenDate] = useState(false);
-
-  const { width, height } = useWindowDimensions(); // Pega a dimensão do dispositivo
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const { token } = useAuth(); 
-  const [buffalos, setBuffalos] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [raca, setRaca] = React.useState<string>('');
+  const [tagPai, setTagPai] = React.useState<string>('');
+  const [tagMae, setTagMae] = React.useState<string>('');
+  const [localizacao, setLocalizacao] = React.useState<string>('');
+  const [openGrupo, setOpenGrupo] = React.useState(false);
+  const [valueGrupo, setValueGrupo] = React.useState(null);
+  const [itemsGrupo, setItemsGrupo] = useState([
+    { label: "Em lactação", value: "Em lactação" },
+    { label: "Secagem", value: "Secagem" },
+    { label: "Seca", value: "Seca" },
+    { label: "Pré-parto", value: "Pré-parto" },
+    { label: "Bezerros", value: "Bezerros" },
+  ]);
 
   useEffect(() => {
     const loadBuffalos = async () => {
@@ -66,10 +79,55 @@ export default function ScreenBufalos() {
   }, [token]);
 
   const filteredBuffalos = buffalos.filter(buffalo => 
-  buffalo.tag.toLowerCase().includes(searchTerm.toLowerCase()) || 
-  buffalo.nome.toLowerCase().includes(searchTerm.toLowerCase())
-);
+    buffalo.tag.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    buffalo.nome.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
+  const handleCreateBuffalo = async () => {
+    try {
+      if (!token) {
+        console.error("Token não disponível");
+        return;
+      }
+
+      const data = {
+          tag: tag,
+          nome: nome,
+          sexo: valueSex,
+          maturidade: valueMatur,
+          raca: raca,
+          tagPai: tagPai,
+          tagMae: tagMae,
+          localizacao: localizacao,
+          grupo: valueGrupo
+      };
+      console.log(data)
+      await postBuffalo(data, token);
+      const buffalosAtualizados = await getBuffalos(token);
+      setBuffalos(buffalosAtualizados);
+
+      setModalVisible(false);
+      alert("Dados atualizados com sucesso!");
+    } catch (error) {
+      console.error("Erro ao atualizar búfalo:", error);
+      alert("Ocorreu um erro ao atualizar os dados. Por favor, tente novamente.");
+    }
+  };
+
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    try {
+      if (token) {
+        const data = await getBuffalos(token);
+        setBuffalos(data);
+      }
+    } catch (error) {
+      console.log('Erro no refresh:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [token]);
 
   if (loading) {
     return (
@@ -81,7 +139,7 @@ export default function ScreenBufalos() {
 
   return (
     <SafeAreaView style={{ flex: 1, alignItems: "center" }}>
-      <ScrollView contentContainerStyle={{ paddingBottom: RFValue(30) }}>
+      <ScrollView contentContainerStyle={{ paddingBottom: RFValue(30) }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <View
           style={{
             width: width,
@@ -158,6 +216,8 @@ export default function ScreenBufalos() {
               }}
               placeholder="Ex: BUF001"
               placeholderTextColor="#999"
+              value={tag}
+              onChangeText={setTag}
             />
           </View>
 
@@ -180,6 +240,8 @@ export default function ScreenBufalos() {
               }}
               placeholder="Ex: Bella"
               placeholderTextColor="#999"
+              value={nome}
+              onChangeText={setNome}
             />
           </View>
         </View>
@@ -277,26 +339,9 @@ export default function ScreenBufalos() {
               }}
               placeholder="Ex: Murrah"
               placeholderTextColor="#999"
+              value={raca}
+              onChangeText={setRaca}
             />
-          </View>
-        </View>
-
-        <View
-          style={{
-            flexDirection: "row",
-            gap: RFValue(10),
-            marginBottom: RFValue(30),
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "column",
-              width: width * 0.88,
-              height: height * 0.05,
-            }}
-          >
-            <TextBody>Data de Nascimento:</TextBody>
-            <DateInput value={date} onChange={(newDate) => setDate(newDate)} />
           </View>
         </View>
 
@@ -326,6 +371,8 @@ export default function ScreenBufalos() {
               }}
               placeholder="Ex: Ordenha"
               placeholderTextColor="#999"
+              value={localizacao}
+              onChangeText={setLocalizacao}
             />
           </View>
 
@@ -337,17 +384,29 @@ export default function ScreenBufalos() {
             }}
           >
             <TextBody>Grupo:</TextBody>
-            <TextInput
+            <DropDownPicker
+              open={openGrupo}
+              value={valueGrupo}
+              items={itemsGrupo}
+              setOpen={setOpenGrupo}
+              setValue={setValueGrupo}
+              setItems={setItemsGrupo}
+              placeholder="Selecione"
+              containerStyle={{
+                width: "100%",
+                height: RFValue(40),
+                marginBottom: RFValue(0),
+              }}
               style={{
+                borderColor: colors.gray.base,
                 backgroundColor: colors.gray.fundoInput,
                 borderRadius: RFValue(10),
-                borderWidth: RFValue(0.6),
-                borderColor: colors.gray.base,
-                width: "100%",
-                height: "100%",
               }}
-              placeholder="Ex: Secagem"
-              placeholderTextColor="#999"
+              dropDownContainerStyle={{
+                backgroundColor: colors.gray.fundoInput,
+                borderColor: colors.gray.base,
+                borderRadius: RFValue(10),
+              }}
             />
           </View>
         </View>
@@ -378,6 +437,8 @@ export default function ScreenBufalos() {
               }}
               placeholder="Ex: BUF001"
               placeholderTextColor="#999"
+              value={tagMae}
+              onChangeText={setTagMae}
             />
           </View>
 
@@ -400,6 +461,8 @@ export default function ScreenBufalos() {
               }}
               placeholder="Ex: BUF002"
               placeholderTextColor="#999"
+              value={tagPai}
+              onChangeText={setTagPai}
             />
           </View>
         </View>
@@ -418,7 +481,7 @@ export default function ScreenBufalos() {
               height: height * 0.05,
             }}
           >
-            <Button text={"Cadastrar novo Bubalino"}></Button>
+            <Button text={"Cadastrar novo Bubalino"} onPress={handleCreateBuffalo}></Button>
           </View>
         </View>
       </ModalCustom>

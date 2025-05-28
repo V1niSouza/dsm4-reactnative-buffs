@@ -85,3 +85,27 @@ export const getOneLactation = async (id: string, token: string): Promise<Lactat
     throw error;
   }
 };
+
+export const updateLactation = async (id: string, data: Partial<Lactation>, token: string): Promise<Lactation | null> => {
+  try {
+    const res = await fetch(`${API_URL}/lactation/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!res.ok) {
+      console.error('Erro na atualização:', await res.text());
+      return null;
+    }
+
+    const { lactation }: ApiResponse = await res.json();
+    return lactation || null;
+  } catch (error) {
+    console.error('Erro na atualização:', error);
+    return null;
+  }
+};

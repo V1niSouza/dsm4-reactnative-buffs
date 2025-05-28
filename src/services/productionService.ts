@@ -37,3 +37,25 @@ export const getAllProductions = async (token: string): Promise<Production[]> =>
   return data.productions;
 };
 
+export const postProduction = async (data: any, id: string, token: string) => {
+  try {
+    const response = await fetch(`${API_URL}/production/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    const responseData = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      throw new Error(`Erro: ${response.status}`);
+    }
+
+    return responseData;
+  } catch (error) {
+    console.error('Erro no postProduction:', error);
+    throw error;
+  }
+};

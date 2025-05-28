@@ -10,8 +10,8 @@ import ModalCustom from "../ModalCustom";
 import TextBody from "../TextBody";
 import { s } from "./styles";
 
-
 type Props = {
+  id: string
   text_tag: string,
   text_name: string,
   text_sex: string,
@@ -23,7 +23,7 @@ type Props = {
   text_dataAtt: string
 };
 
-export default function CardReproducao({ text_tag, text_name, text_sex, text_maturidade, text_atividade, text_grupo, text_dataAtt, text_raca, text_localizacao}: Props) {
+export default function CardReproducao({ id, text_tag, text_name, text_sex, text_maturidade, text_atividade, text_grupo, text_dataAtt, text_raca, text_localizacao}: Props) {
   const { width, height } = useWindowDimensions();
   const styles = s(width, height);
   const [expanded, setExpanded] = useState(false);
@@ -175,11 +175,11 @@ const toggleExpand = () => {
         )}
         </Animated.View>
 
-        <ModalCustom visible={modalVisible} onClose={() => setModalVisible(false)} title={"Cadastrando nova reprodução:"}>
+        <ModalCustom visible={modalVisible} onClose={() => setModalVisible(false)} title={"Atualizando reprodução:"}>
           <View style={{ flexDirection: "row", gap: RFValue(10), marginBottom: RFValue(30) }}>
             <View style={{ flexDirection: "column", width: width * 0.42, height: height * 0.054 }}>
               <TextBody variant="secondary">Tag Bufala:</TextBody>
-              <TextBody>BUF006</TextBody>
+              <TextBody>BUF001</TextBody>
             </View>
             <View style={{ flexDirection: "column", width: width * 0.42, height: height * 0.05, zIndex: 3000}}>
               <TextBody>Selecione o status:</TextBody>
